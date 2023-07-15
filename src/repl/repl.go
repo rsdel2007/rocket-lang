@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"rocket/src/lexer"
+	"rocket/src/token"
 )
 
 func runString(s string) {
-	// create environment
-	// tokenize
-	// ast
-	// eval
-	// return output
+	// todo: take environment as argument
+	l := lexer.New(s)
+	for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
+		fmt.Printf("%s (%s) | %d:%d\n", tok.Literal, tok.Type, tok.Ln, tok.Col)
+	}
 }
 
 func fileMode() {
@@ -22,7 +24,7 @@ func fileMode() {
 		log.Fatal("Unable to read file", err)
 	}
 	str := string(b)
-	fmt.Println(str) // todo: remove this
+	runString(str)
 }
 
 const PROMT = "\x1b[32m>> \x1b[0m"
@@ -38,7 +40,7 @@ func replMode() {
 			return
 		}
 		str := scanner.Text()
-		fmt.Println(str) // todo: remove this
+		runString(str)
 		fmt.Println()
 	}
 }
