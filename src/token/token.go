@@ -1,5 +1,7 @@
 package token
 
+import "fmt"
+
 type TokenType string
 
 type Token struct {
@@ -11,6 +13,10 @@ type Token struct {
 
 func New(t TokenType, l string, ln int, col int) Token {
 	return Token{Type: t, Literal: l, Ln: ln, Col: col }
+}
+
+func (tok *Token) Inspect() {
+	fmt.Printf("%d:%d\t%s (%s)\n", tok.Ln, tok.Col, tok.Type, tok.Literal)
 }
 
 const (

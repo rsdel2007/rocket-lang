@@ -13,7 +13,7 @@ func runString(s string) {
 	// todo: take environment as argument
 	l := lexer.New(s)
 	for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-		fmt.Printf("%s (%s) | %d:%d\n", tok.Literal, tok.Type, tok.Ln, tok.Col)
+		tok.Inspect()
 	}
 }
 
