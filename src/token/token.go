@@ -21,35 +21,51 @@ func (tok *Token) Inspect() {
 
 const (
 	ILLEGAL = "ILLEGAL"
-	EOF = "EOF"
+	EOF     = "EOF"
 
 	// Identifiers + literals
-	IDENT = "IDENT" // add, foobar, x, y, ...
-
-	// data types
-	INT = "INT"
+	IDENT  = "IDENT"  // add, foobar, x, y, ...
+	INT    = "INT"    // 1343456
+	STRING = "STRING" // "foobar" // todo:
 
 	// Operators
 	ASSIGN   = "="
 	PLUS     = "+"
 	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	EXPONENT = "**"
+	SLASH    = "/"
+
+	LT = "<"
+	GT = ">"
+	// todo: maybe support <= and >= operators
+	// todo: maybe binary operators
+	// todo: or, and operators
+
+	EQ     = "=="
+	NOT_EQ = "!="
 
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
-	LPAREN = "("
-	RPAREN = ")"
-	LBRACE = "{"
-	RBRACE = "}"
+	COLON     = ":"
+
+	LPAREN   = "("
+	RPAREN   = ")"
+	LBRACE   = "{"
+	RBRACE   = "}"
+	LBRACKET = "["
+	RBRACKET = "]"
 
 	// Keywords
 	FUNCTION = "FUNCTION"
-	LET = "LET"
-	RETURN = "RETURN"
-	TRUE = "TRUE"
-	FALSE = "FALSE"
-	IF = "IF"
-	ELSE = "ELSE"
+	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
 var Keywords = map[string]TokenType{

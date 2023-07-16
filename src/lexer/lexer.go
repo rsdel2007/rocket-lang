@@ -54,11 +54,44 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case NULL_CHAR:
-		tok = l.createToken(token.EOF, string(NULL_CHAR))
-	case '=':
-		tok = l.createToken(token.ASSIGN, string(l.ch))
+		tok = l.createToken(token.EOF, "")
+	case '=': // = or ==
+		s := string(l.ch)
+		var tt token.TokenType = token.ASSIGN
+		if l.peekChar() == '=' {
+			l.readChar()
+			s += string(l.ch)
+			tt = token.EQ
+		}
+		tok = l.createToken(tt, s)
+	case '!': // ! or !=
+		s := string(l.ch)
+		var tt token.TokenType = token.BANG
+		if l.peekChar() == '=' {
+			l.readChar()
+			s += string(l.ch)
+			tt = token.NOT_EQ
+		}
+		tok = l.createToken(tt, s)
+	case '*': // * or **
+		s := string(l.ch)
+		var tt token.TokenType = token.ASTERISK
+		if l.peekChar() == '*' {
+			l.readChar()
+			s += string(l.ch)
+			tt = token.EXPONENT
+		}
+		tok = l.createToken(tt, s)
 	case '+':
 		tok = l.createToken(token.PLUS, string(l.ch))
+	case ':':
+		tok = l.createToken(token.COLON, string(l.ch))
+	case '<':
+		tok = l.createToken(token.LT, string(l.ch))
+	case '>':
+		tok = l.createToken(token.GT, string(l.ch))
+	case '/':
+		tok = l.createToken(token.SLASH, string(l.ch))
 	case '-':
 		tok = l.createToken(token.MINUS, string(l.ch))
 	case ',':
@@ -73,7 +106,7 @@ func (l *Lexer) NextToken() token.Token {
 		tok = l.createToken(token.LBRACE, string(l.ch))
 	case '}':
 		tok = l.createToken(token.RBRACE, string(l.ch))
-	default:
+	default: // keywords, identifiers, numbers, strings
 		if isDigit(l.ch) {
 			literal := l.parseNumber()
 			tok = l.createToken(token.INT, literal)
