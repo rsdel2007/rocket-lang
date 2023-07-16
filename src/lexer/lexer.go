@@ -1,8 +1,9 @@
 package lexer
 
 import (
-	"golang.org/x/exp/utf8string"
 	"rocket/src/token"
+
+	"golang.org/x/exp/utf8string"
 )
 
 const NULL_CHAR = '\x00'
@@ -43,9 +44,9 @@ func (l *Lexer) createToken(t token.TokenType, s string) token.Token {
 	c := l.currentCol - utf8string.NewString(s).RuneCount()
 	return token.Token{
 		Literal: s,
-		Type: t,
-		Ln: l.currentLine,
-		Col: c,
+		Type:    t,
+		Ln:      l.currentLine,
+		Col:     c,
 	}
 }
 func (l *Lexer) NextToken() token.Token {
@@ -108,8 +109,13 @@ func (l *Lexer) NextToken() token.Token {
 		tok = l.createToken(token.RBRACE, string(l.ch))
 	default: // keywords, identifiers, numbers, strings
 		if isDigit(l.ch) {
-			literal := l.parseNumber()
-			tok = l.createToken(token.INT, literal)
+			literal, isFloat := l.parseNumber()
+			if isFloat {
+				tok = l.createToken(token.FLOAT, literal)
+			} else {
+				tok = l.createToken(token.INT, literal)
+			}
+
 		} else if isLetter(l.ch) {
 			literal := l.parseString()
 			var tt token.TokenType
@@ -145,21 +151,34 @@ func (l *Lexer) eatWhitespace() {
 	}
 }
 
-func (l *Lexer) parseNumber() string {
+func (l *Lexer) parseNumber() (string, bool) {
 	s := ""
-	for ;isDigit(l.ch); {
+	numDecimalPoints := 0 // Tracking no of decimal points
+	for isDigit(l.ch) || l.ch == '.' {
+		if l.ch == '.' {
+			numDecimalPoints++
+			if numDecimalPoints > 1 {
+				return s, false
+			}
+		}
 		s += string(l.ch)
-		if !isDigit(l.peekChar()) {
-			return s
+		if !isDigit(l.peekChar()) && l.peekChar() != '.' {
+			if numDecimalPoints == 1 {
+				return s, true
+			}
+			return s, false
 		}
 		l.readChar()
 	}
-	return s
+	if numDecimalPoints > 0 {
+		return s, true
+	}
+	return s, false
 }
 
 func (l *Lexer) parseString() string {
 	s := ""
-	for ;isLetter(l.ch); {
+	for isLetter(l.ch) {
 		s += string(l.ch)
 		if !isLetter(l.peekChar()) {
 			return s
@@ -174,12 +193,12 @@ func (l *Lexer) parseString() string {
 func isDigit(char rune) bool {
 	if char >= '0' && char <= '9' {
 		return true
-	} 
+	}
 	return false
 }
 
 func isLetter(char rune) bool {
-	if (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z' ) || char == '_' || char == '🚀' {
+	if (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || char == '_' || char == '🚀' {
 		return true
 	}
 	return false

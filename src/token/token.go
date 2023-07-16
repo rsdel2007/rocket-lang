@@ -5,14 +5,14 @@ import "fmt"
 type TokenType string
 
 type Token struct {
-	Type TokenType
+	Type    TokenType
 	Literal string
-	Ln int
-	Col int
+	Ln      int
+	Col     int
 }
 
 func New(t TokenType, l string, ln int, col int) Token {
-	return Token{Type: t, Literal: l, Ln: ln, Col: col }
+	return Token{Type: t, Literal: l, Ln: ln, Col: col}
 }
 
 func (tok *Token) Inspect() {
@@ -27,6 +27,7 @@ const (
 	IDENT  = "IDENT"  // add, foobar, x, y, ...
 	INT    = "INT"    // 1343456
 	STRING = "STRING" // "foobar" // todo:
+	FLOAT  = "FLOAT"
 
 	// Operators
 	ASSIGN   = "="
@@ -69,11 +70,11 @@ const (
 )
 
 var Keywords = map[string]TokenType{
-	"func": FUNCTION,
-	"let": LET,
+	"func":   FUNCTION,
+	"let":    LET,
 	"return": RETURN,
-	"true": TRUE,
-	"false": FALSE,
-	"if": IF,
-	"else": ELSE, 
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
 }

@@ -26,13 +26,14 @@ if (5 < 10) {
 10 == 10;
 10 != 9;
 5 ** 5;
+let a = 9.5
 `
 	expectedResult := []struct {
-		expectedType token.TokenType
+		expectedType    token.TokenType
 		expectedLiteral string
-		ln int
-		col int
-	} {
+		ln              int
+		col             int
+	}{
 		{token.LET, "let", 1, 1},
 		{token.IDENT, "🚀five", 1, 5},
 		{token.ASSIGN, "=", 1, 11},
@@ -110,7 +111,11 @@ if (5 < 10) {
 		{token.EXPONENT, "**", 20, 3},
 		{token.INT, "5", 20, 6},
 		{token.SEMICOLON, ";", 20, 7},
-		{token.EOF, "", 21, 2},
+		{token.LET, "let", 21, 1},
+		{token.IDENT, "a", 21, 5},
+		{token.ASSIGN, "=", 21, 7},
+		{token.FLOAT, "9.5", 21, 9},
+		{token.EOF, "", 22, 2},
 	}
 
 	l := New(input)
